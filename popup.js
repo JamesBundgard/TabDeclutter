@@ -33,12 +33,13 @@ closeUnpin.onclick = function() {
     var opentabs = result.open;
     chrome.storage.sync.get(['pinned'], function(result) {
       var pinned = result.pinned;
-      console.log(opentabs.length, pinned.length);
-      if (opentabs.length === pinned.length){
+      console.log(opentabs, pinned);
+      if (pinned.length === 0){
         chrome.tabs.create({index:0});
         chrome.tabs.remove(opentabs);
       } else {
         chrome.tabs.remove(opentabs.diff(pinned));
+        chrome.storage.sync.set({open:pinned});
       }
     });
   });

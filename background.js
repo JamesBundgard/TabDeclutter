@@ -8,7 +8,7 @@ chrome.runtime.onInstalled.addListener(function() {
       tab_ids.push(tab.id);
     });
     chrome.storage.sync.set({open: tab_ids}, function() {
-      console.log("IDs have been added.");
+      console.log(tab_ids.length);
     });
   });
 });
@@ -30,6 +30,14 @@ chrome.tabs.onRemoved.addListener(function(tabId, removeInfo) {
     })
     chrome.storage.sync.set({open: result.open}, function() {
       console.log(result.open.length);
+    });
+    chrome.storage.sync.get(['pinned'], function(result){
+      result.pinned = result.pinned.filter(function(item) {
+        return item !== tabId;
+      })
+      chrome.storage.sync.set({pinned: result.pinned}, function() {
+        console.log(result.pinned.length);
+      });
     });
   });
 });
